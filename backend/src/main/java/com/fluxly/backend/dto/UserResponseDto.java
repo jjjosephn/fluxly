@@ -2,8 +2,6 @@ package com.fluxly.backend.dto;
 
 import java.util.UUID;
 
-import com.fluxly.backend.entity.User;
-
 public class UserResponseDto {
    private UUID id;
    private String email;

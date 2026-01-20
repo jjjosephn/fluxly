@@ -26,8 +26,10 @@ const Signup = () => {
             body: JSON.stringify(requestBody)
          })
 
-         if (!res.ok) {
-            throw new Error('Failed to sign up')
+         if (res.status === 409) {
+            const message = await res.text()
+            alert(message)
+            return
          }
          const data = await res.json()
          console.log('User signed up successfully:', data)

@@ -1,14 +1,21 @@
 package com.fluxly.backend.entity;
-import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(
    name = "users",
    uniqueConstraints = {
-      @UniqueConstraint(columnNames = "email"),
-      @UniqueConstraint(columnNames = "username")
+      @UniqueConstraint(name = "uk_users_email", columnNames = "email"),
+      @UniqueConstraint(name = "uk_users_username", columnNames = "username")
    }
 )
 public class User {
