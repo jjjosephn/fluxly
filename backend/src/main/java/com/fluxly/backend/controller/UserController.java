@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fluxly.backend.dto.UserRegisterRequest;
-import com.fluxly.backend.dto.UserResponse;
+import com.fluxly.backend.dto.UserRegisterRequestDto;
+import com.fluxly.backend.dto.UserResponseDto;
 import com.fluxly.backend.entity.User;
 import com.fluxly.backend.service.UserService;
 
@@ -22,12 +22,12 @@ public class UserController {
    private UserService userService;
 
    @GetMapping
-   public List<UserResponse> getAllUsers() {
+   public List<UserResponseDto> getAllUsers() {
       return userService.getAllUsers();
    }
 
    @PostMapping
-   public User registerUser(@RequestBody UserRegisterRequest request) {
+   public User registerUser(@RequestBody UserRegisterRequestDto request) {
       return userService.registerUser(request);
    }
 
