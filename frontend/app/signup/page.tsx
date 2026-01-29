@@ -18,7 +18,7 @@ const Signup = () => {
       }
 
       try {
-         const res = await fetch(`http://localhost:8080/api/users/`, {
+         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/`, {
             method: 'POST',
             headers: {
                'Content-Type': 'application/json'
@@ -31,6 +31,14 @@ const Signup = () => {
             alert(message)
             return
          }
+
+         if (!res.ok) {
+            const message = await res.text()
+            console.error('Signup failed:', message)
+            alert('Signup failed. Please try again.')
+            return
+         }
+         
          const data = await res.json()
          console.log('User signed up successfully:', data)
       } catch (error) {
@@ -43,28 +51,32 @@ const Signup = () => {
          <h1>Signup</h1>
          <form onSubmit={handleOnSubmit}>
             <input
-               type="text"
+               type="email"
                placeholder="Email"
                value={email}
                onChange={(e) => setEmail(e.target.value)}
+               required
             />
             <input
                type="text"
                placeholder="Name"
                value={name}
                onChange={(e) => setName(e.target.value)}
+               required
             />
             <input
                type="text"
                placeholder="Username"
                value={username}
                onChange={(e) => setUsername(e.target.value)}
+               required
             />
             <input
                type="password"
                placeholder="Password"
                value={password}
                onChange={(e) => setPassword(e.target.value)}
+               required
             />
             <button type="submit">Sign Up</button>
          </form>

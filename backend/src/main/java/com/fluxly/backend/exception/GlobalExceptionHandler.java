@@ -17,10 +17,12 @@ public class GlobalExceptionHandler {
    @ExceptionHandler(DataIntegrityViolationException.class)
    public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
       String message = "Email or username already exists.";
+      Throwable rootCause = ex.getRootCause();
+      String rootMessage = rootCause != null ? rootCause.getMessage() : null;
 
-      if (ex.getRootCause() != null && ex.getRootCause().getMessage().contains("uk_users_email")) {
+      if (rootMessage != null && rootMessage.contains("uk_users_email")) {
          message = "Email already exists.";
-      } else if (ex.getRootCause() != null && ex.getRootCause().getMessage().contains("uk_users_username")) {
+      } else if (rootMessage != null && rootMessage.contains("uk_users_username")) {
          message = "Username already exists.";
       }
 
