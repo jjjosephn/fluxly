@@ -1,13 +1,23 @@
 'use client'
 
-import React from "react"
+import React, { useRef } from "react"
 
 import { useState } from 'react'
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { BouncingDots } from '@/components/ui/bouncing-dots'
 import Image from 'next/image'
+import { useRouter } from "next/navigation"
+import { useToaster } from "@/app/ToasterContext"
 
+type Variant = 'default' | 'success' | 'error' | 'warning';
+type Position =
+  | 'top-left'
+  | 'top-center'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-center'
+  | 'bottom-right';
 export function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -17,6 +27,8 @@ export function SignupPage() {
     email: '',
     password: '',
   })
+  const router = useRouter()
+  const { showToast } = useToaster();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
@@ -28,6 +40,7 @@ export function SignupPage() {
 
 const handleOnSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
     setIsSubmitting(true)
 
     const requestBody = {
@@ -48,14 +61,14 @@ const handleOnSubmit = async (e: React.FormEvent) => {
 
         if (res.status === 409) {
           const message = await res.text()
-          alert(message)
+          showToast('error', message, 'top-center');
           return
         }
 
         if (!res.ok) {
           const message = await res.text()
           console.error('Signup failed:', message)
-          alert('Signup failed. Please try again.')
+          showToast('error', 'Signup failed. Please try again.', 'top-center');
           return
         }
         
@@ -63,14 +76,21 @@ const handleOnSubmit = async (e: React.FormEvent) => {
         console.log('User signed up successfully:', data)
     } catch (error) {
         console.error('Error signing up:', error)
+        showToast('error', 'Unable to connect to the server. Please check your connection and try again later.', 'top-center');
     } finally {
         setIsSubmitting(false)
     }
 
-    formData.email = ''
-    formData.name = ''
-    formData.username = ''
-    formData.password = ''
+    showToast('success', `Welcome to Fluxly, ${formData.name}.`, 'top-center');
+
+    setFormData({
+      email: '',
+      name: '',
+      username: '',
+      password: ''
+    });
+
+    router.push("/dashboard")
   }
 
   return (
@@ -80,13 +100,12 @@ const handleOnSubmit = async (e: React.FormEvent) => {
         <div className="flex-1 relative overflow-hidden md:block hidden p-4">
           <div className="relative w-full h-full rounded-lg overflow-hidden ring-4 ring-white/80 shadow-lg">
             <div className="absolute top-4 left-4 z-10">
-              <button
+              <Link
+                href="/"
                 className="w-10 h-10 bg-black/20 backdrop-blur-sm rounded-full border-2 border-white flex items-center justify-center hover:bg-black/30 transition-all"
               >
-                <Link href="/">
-                  <ArrowLeft className="w-5 h-5 text-white" />
-                </Link>
-              </button>
+                <ArrowLeft className="w-5 h-5 text-white" />
+              </Link>
             </div>
 
             <Image
@@ -191,7 +210,7 @@ const handleOnSubmit = async (e: React.FormEvent) => {
               </div>
             </div>
 
-{/* Submit Button */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={isSubmitting}
