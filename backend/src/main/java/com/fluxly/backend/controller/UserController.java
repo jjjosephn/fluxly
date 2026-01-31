@@ -16,6 +16,8 @@ import com.fluxly.backend.dto.UserResponseDto;
 import com.fluxly.backend.entity.User;
 import com.fluxly.backend.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/users/")
 public class UserController {
@@ -34,7 +36,7 @@ public class UserController {
    }
 
    @PostMapping("/signin")
-   public UserLoginResponseDto signinUser(@RequestBody UserLoginRequestDto request) {
+   public UserLoginResponseDto signinUser(@Valid @RequestBody UserLoginRequestDto request) {
       return userService.signin(request);
    }
 

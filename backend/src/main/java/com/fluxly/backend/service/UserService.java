@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fluxly.backend.config.JwtService;
 import com.fluxly.backend.dto.UserLoginRequestDto;
@@ -45,7 +47,7 @@ public class UserService {
       Optional<User> userOpt = userRepository.findByEmailOrUsername(request.getEmailOrUsername());
 
       if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPasswordHash())) {
-         throw new RuntimeException("Invalid email/username or password");
+         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email/username or password");
       }
 
       User user = userOpt.get();

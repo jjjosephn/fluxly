@@ -1,5 +1,6 @@
 package com.fluxly.backend.config;
 
+import java.util.Collections;
 import java.util.UUID;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
             if (user != null) {
                UsernamePasswordAuthenticationToken authToken = 
-                  new UsernamePasswordAuthenticationToken(user, null, null);
+                  new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
          } catch (Exception e) {
