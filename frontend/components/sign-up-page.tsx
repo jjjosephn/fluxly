@@ -94,7 +94,6 @@ const handleOnSubmit = async (e: React.FormEvent) => {
   }
 
   return (
-    <div className="w-full h-full min-h-screen bg-gradient-to-br from-pri via-blue-900 to-sec flex items-center justify-center p-4">
       <div className="flex flex-col md:flex-row w-full max-w-6xl bg-white rounded-3xl shadow-xl overflow-hidden">
         {/* Left Panel */}
         <div className="flex-1 relative overflow-hidden md:block hidden p-4">
@@ -225,6 +224,5 @@ const handleOnSubmit = async (e: React.FormEvent) => {
           </form>
         </div>
       </div>
-    </div>
   )
 }

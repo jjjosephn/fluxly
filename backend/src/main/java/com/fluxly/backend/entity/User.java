@@ -2,6 +2,8 @@ package com.fluxly.backend.entity;
 import java.time.Instant;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +35,7 @@ public class User {
    private String name;
 
    @Column(nullable = false)
+   @JsonIgnore
    private String passwordHash;
 
    @Column(nullable = false, updatable = false)
@@ -53,6 +56,7 @@ public class User {
    public String getUsername() { return this.username; }
    public String getName() { return this.name; }
    public Instant getCreatedAt() { return this.createdAt; }
+   public String getPasswordHash() { return this.passwordHash; }
 
    public void setEmail(String email) { this.email = email; }
    public void setUsername(String username) { this.username = username; }

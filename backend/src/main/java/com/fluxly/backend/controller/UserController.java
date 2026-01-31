@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fluxly.backend.dto.UserLoginRequestDto;
+import com.fluxly.backend.dto.UserLoginResponseDto;
 import com.fluxly.backend.dto.UserRegisterRequestDto;
 import com.fluxly.backend.dto.UserResponseDto;
 import com.fluxly.backend.entity.User;
 import com.fluxly.backend.service.UserService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/users/")
@@ -29,6 +33,11 @@ public class UserController {
    @PostMapping
    public User registerUser(@RequestBody UserRegisterRequestDto request) {
       return userService.registerUser(request);
+   }
+
+   @PostMapping("/signin")
+   public UserLoginResponseDto signinUser(@Valid @RequestBody UserLoginRequestDto request) {
+      return userService.signin(request);
    }
 
 }
