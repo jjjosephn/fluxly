@@ -53,6 +53,7 @@ public class User {
    public String getUsername() { return this.username; }
    public String getName() { return this.name; }
    public Instant getCreatedAt() { return this.createdAt; }
+   public String getPasswordHash() { return this.passwordHash; }
 
    public void setEmail(String email) { this.email = email; }
    public void setUsername(String username) { this.username = username; }

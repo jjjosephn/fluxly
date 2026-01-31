@@ -1,11 +1,15 @@
 package com.fluxly.backend.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fluxly.backend.config.JwtService;
+import com.fluxly.backend.dto.UserLoginRequestDto;
+import com.fluxly.backend.dto.UserLoginResponseDto;
 import com.fluxly.backend.dto.UserRegisterRequestDto;
 import com.fluxly.backend.dto.UserResponseDto;
 import com.fluxly.backend.entity.User;
@@ -18,6 +22,9 @@ public class UserService {
 
    @Autowired
    private PasswordEncoder passwordEncoder;
+
+   @Autowired
+   private JwtService jwtService;
 
    private UserResponseDto toUserDto(User user) {
       return new UserResponseDto(user.getId(), user.getEmail(), user.getUsername(), user.getName());
@@ -34,5 +41,17 @@ public class UserService {
       return userRepository.findAll().stream().map(this::toUserDto).toList();
    }
 
+   public UserLoginResponseDto signin(UserLoginRequestDto request) {
+      Optional<User> userOpt = userRepository.findByEmailOrUsername(request.getEmailOrUsername());
+
+      if (userOpt.isEmpty() || !passwordEncoder.matches(request.getPassword(), userOpt.get().getPasswordHash())) {
+         throw new RuntimeException("Invalid email/username or password");
+      }
+
+      User user = userOpt.get();
+      String token = jwtService.generateToken(user.getId().toString());
+
+      return new UserLoginResponseDto(token);
+   }
 
 }
