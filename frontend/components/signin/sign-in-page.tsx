@@ -40,8 +40,13 @@ export function SignInCard() {
         body: JSON.stringify(requestBody)
       })
 
+      const data = await res.json()
+
+      localStorage.setItem('token', data.token);
+
       if(!res.ok) {
         showToast('error', "Incorrect email, username, or password.", 'top-center');
+        setIsSubmitting(false);
         return;
       }
 
@@ -53,8 +58,10 @@ export function SignInCard() {
       router.push('/dashboard');
 
     } catch (error) {
-      console.error("Incorrect email, username, or password:", error)
+      console.error("Signin request failed: ", error)
       showToast('error', 'Incorrect email, username, or password.', 'top-center');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -135,7 +142,7 @@ export function SignInCard() {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1">
+                <label htmlFor="emailOrUsername" className="block text-sm font-medium text-foreground mb-1">
                   Email or Username<span className="text-foreground">*</span>
                 </label>
                 <Input
@@ -189,7 +196,7 @@ export function SignInCard() {
                   {isSubmitting ? (
                       <BouncingDots dots={3} message="Submitting" messagePlacement="right" className="w-2 h-2 bg-white" />
                     ) : (
-                      'Create Account'
+                      'Sign in'
                     )}
                   </button>
               </motion.div>

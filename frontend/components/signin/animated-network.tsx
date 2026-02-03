@@ -35,7 +35,9 @@ export function AnimatedNetwork() {
       canvas.height = height
     })
 
-    resizeObserver.observe(canvas.parentElement as Element)
+    const parent = canvas.parentElement
+    if (!parent) return
+    resizeObserver.observe(parent)
     return () => resizeObserver.disconnect()
   }, [])
 
