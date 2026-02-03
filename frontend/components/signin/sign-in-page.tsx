@@ -40,15 +40,15 @@ export function SignInCard() {
         body: JSON.stringify(requestBody)
       })
 
-      const data = await res.json()
-
-      localStorage.setItem('token', data.token);
-
       if(!res.ok) {
         showToast('error', "Incorrect email, username, or password.", 'top-center');
         setIsSubmitting(false);
         return;
       }
+
+      const data = await res.json()
+
+      localStorage.setItem('token', data.token);
 
       setFormData({
         emailOrUsername: '',
