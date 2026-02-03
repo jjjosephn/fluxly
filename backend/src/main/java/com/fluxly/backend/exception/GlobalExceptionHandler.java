@@ -28,4 +28,10 @@ public class GlobalExceptionHandler {
 
       return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
    }
+
+   @ExceptionHandler(InvalidCredentialsException.class)
+   public ResponseEntity<String> handleInvalidCredentialsException(InvalidCredentialsException ex) {
+      String message = "Invalid email, username, or password.";
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(message);
+   }
 }
