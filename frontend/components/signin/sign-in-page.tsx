@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { useToaster } from "@/app/ToasterContext"
 import { useRouter } from "next/navigation"
+import { BouncingDots } from "../ui/bouncing-dots"
 
 export function SignInCard() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
@@ -23,6 +24,7 @@ export function SignInCard() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsSubmitting(true);
 
     const requestBody = {
       emailOrUsername: formData.emailOrUsername,
@@ -184,20 +186,12 @@ export function SignInCard() {
                     isHovered ? "shadow-lg" : ""
                   )}
                 >
-                  <span className="flex items-center justify-center">
-                    Sign in
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </span>
-                  {isHovered && (
-                    <motion.span
-                      initial={{ left: "-100%" }}
-                      animate={{ left: "100%" }}
-                      transition={{ duration: 1, ease: "easeInOut" }}
-                      className="absolute top-0 bottom-0 left-0 w-20 bg-gradient-to-r from-transparent via-background/30 to-transparent"
-                      style={{ filter: "blur(8px)" }}
-                    />
-                  )}
-                </button>
+                  {isSubmitting ? (
+                      <BouncingDots dots={3} message="Submitting" messagePlacement="right" className="w-2 h-2 bg-white" />
+                    ) : (
+                      'Create Account'
+                    )}
+                  </button>
               </motion.div>
 {/* 
               <div className="text-center mt-6">
