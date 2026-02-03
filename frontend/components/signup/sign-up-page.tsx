@@ -10,14 +10,6 @@ import Image from 'next/image'
 import { useRouter } from "next/navigation"
 import { useToaster } from "@/app/ToasterContext"
 
-type Variant = 'default' | 'success' | 'error' | 'warning';
-type Position =
-  | 'top-left'
-  | 'top-center'
-  | 'top-right'
-  | 'bottom-left'
-  | 'bottom-center'
-  | 'bottom-right';
 export function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
