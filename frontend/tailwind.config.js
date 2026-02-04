@@ -7,6 +7,7 @@ module.exports = {
         pri: "#252a36",
         sec: "#303948",
         cta: "#2a78bb",
+        "dark-cta": "#145369"
       },
     },
   },
