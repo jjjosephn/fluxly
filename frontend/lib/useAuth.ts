@@ -1,18 +1,28 @@
-import React, { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+'use client'
 
-export function useAuth() {
-   const router = useRouter();
-   
+import { useEffect, useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+
+export function useAuth({ redirectIfAuthed = false } = {}) {
+   const router = useRouter()
+   const pathname = usePathname();
+   const [loading, setLoading] = useState(true)
 
    useEffect(() => {
-      const token = localStorage.getItem('token');
-      console.log(token);
-      if (!token) {
-         router.push('/signin');
-      }
-   }, [router]);
-   
+      const token = localStorage.getItem('token')
 
-   
+      if (redirectIfAuthed && token) {
+         router.replace('/ly/dashboard')
+         return
+      }
+
+      if (!redirectIfAuthed && !token) {
+         router.replace('/signin')
+         return
+      }
+
+      setLoading(false)
+   }, [router, pathname, redirectIfAuthed])
+
+   return { loading }
 }

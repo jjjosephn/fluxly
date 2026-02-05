@@ -55,7 +55,7 @@ export function SignInCard() {
         password: '',
       })
 
-      router.push('/dashboard');
+      router.push('/ly/dashboard');
 
     } catch (error) {
       console.error("Signin request failed: ", error)
