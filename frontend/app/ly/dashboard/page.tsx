@@ -1,10 +1,11 @@
 'use client'
 
 import { useAuth } from '@/lib/auth'
-import React from 'react'
 
 const Dashboard = () => {
-  useAuth();
+  const { loading } = useAuth();
+
+  if (loading) return null
 
   return (
     <div>Dashboard</div>

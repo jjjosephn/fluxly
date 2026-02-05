@@ -20,10 +20,10 @@ public class GlobalExceptionHandler {
       Throwable rootCause = ex.getRootCause();
       String rootMessage = rootCause != null ? rootCause.getMessage() : null;
 
-      if (rootMessage != null && rootMessage.contains("uk_users_email")) {
-         message = "Email already exists.";
-      } else if (rootMessage != null && rootMessage.contains("uk_users_username")) {
+      if (rootMessage != null && rootMessage.contains("uk_users_username")) {
          message = "Username already exists.";
+      } else if (rootMessage != null && rootMessage.contains("uk_users_email")) {
+         message = "Email already exists.";
       }
 
       return ResponseEntity.status(HttpStatus.CONFLICT).body(message);

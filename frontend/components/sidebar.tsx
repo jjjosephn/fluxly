@@ -48,9 +48,7 @@ const navItems = [
 export function Sidebar({ className }: SidebarProps) {
    const [isCollapsed, setIsCollapsed] = useState(false)
    const pathname = usePathname()
-   const user = getUserFromToken();
-
-   console.log(user);
+   const user = getUserFromToken() as any;
 
    return (
       <TooltipProvider>

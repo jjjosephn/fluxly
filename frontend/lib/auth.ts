@@ -48,6 +48,24 @@ export function getUserFromToken() {
    }
 }
 
+export async function signUp(name: string, username: string, email: string, password: string) {
+   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, username, email, password })
+   })
+
+   const text = await res.text();
+
+   if (!res.ok) {
+      throw new Error(text || 'Failed to sign up')
+   }
+
+   const data = await JSON.parse(text)
+   localStorage.setItem('token', data.token)
+   return data
+}
+
 export async function signIn(emailOrUsername: string, password: string) {
    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/signin`, {
       method: 'POST',

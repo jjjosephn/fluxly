@@ -31,7 +31,7 @@ export function SignInCard() {
       const { token } = await signIn(formData.emailOrUsername, formData.password);
 
       const payload = JSON.parse(atob(token.split('.')[1]));
-      const name = payload.name.split(' ')[0];
+      const name = payload.name.split(' ')[0] ?? 'back';
 
       showToast('success', `Welcome back ${name}!`, 'top-center');
 
