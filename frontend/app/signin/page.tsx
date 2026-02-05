@@ -1,6 +1,6 @@
 'use client'
 import { SignInCard } from '@/components/signin/sign-in-page'
-import { useAuth } from '@/lib/useAuth'
+import { useAuth } from '@/lib/auth'
 
 const Signin = () => {
   const { loading } = useAuth({ redirectIfAuthed: true });

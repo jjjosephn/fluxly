@@ -1,7 +1,7 @@
 'use client'
 
 import { Navbar } from "@/components/landingpage/navbar";
-import { useAuth } from "@/lib/useAuth";
+import { useAuth } from "@/lib/auth";
 
 export default function Home() {
   const { loading } = useAuth({ redirectIfAuthed: true });

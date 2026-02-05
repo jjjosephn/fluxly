@@ -1,6 +1,6 @@
 'use client'
 import { SignupPage } from '@/components/signup/sign-up-page'
-import { useAuth } from '@/lib/useAuth'
+import { useAuth } from '@/lib/auth'
 
 const Signup = () => {
    const { loading } = useAuth({ redirectIfAuthed: true });

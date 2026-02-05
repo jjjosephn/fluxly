@@ -1,6 +1,6 @@
 'use client'
 
-import { useAuth } from '@/lib/useAuth'
+import { useAuth } from '@/lib/auth'
 import React from 'react'
 
 const Dashboard = () => {

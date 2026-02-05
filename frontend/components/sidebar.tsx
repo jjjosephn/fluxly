@@ -16,10 +16,12 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
+  LogOut
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import Image from "next/image"
+import { getUserFromToken, signOut } from "@/lib/auth"
 
 interface SidebarProps {
    className?: string
@@ -46,6 +48,9 @@ const navItems = [
 export function Sidebar({ className }: SidebarProps) {
    const [isCollapsed, setIsCollapsed] = useState(false)
    const pathname = usePathname()
+   const user = getUserFromToken();
+
+   console.log(user);
 
    return (
       <TooltipProvider>
@@ -83,10 +88,10 @@ export function Sidebar({ className }: SidebarProps) {
             <nav className="flex-1 p-3">
                <span
                   className={cn(
-                  "mb-2 block text-xs font-medium uppercase tracking-wider text-muted-foreground",
-                  isCollapsed && "sr-only"
+                     "mb-2 block text-xs font-medium uppercase tracking-wider text-muted-foreground",
+                     isCollapsed && "opacity-0"
                   )}
-               >
+                  >
                   Menu
                </span>
                <div className="space-y-1">
@@ -100,7 +105,7 @@ export function Sidebar({ className }: SidebarProps) {
                         "flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-gray-200",
                         isCollapsed && "justify-center px-0",
                         isActive &&
-                           "bg-sec text-white hover:bg-pri"
+                           "bg-pri text-white hover:bg-sec"
                         )}
                      >
                         <item.icon className="size-5 shrink-0" />
@@ -123,7 +128,11 @@ export function Sidebar({ className }: SidebarProps) {
             </nav>
 
             {/* Profile Section */}
-            <div className="mt-auto p-3">
+            <div className="mt-auto">
+            {/* Divider Line */}
+            <div className="border-t border-gray-300" />
+            
+            <div className="p-3">
                {isCollapsed ? (
                   <Tooltip>
                   <TooltipTrigger asChild>
@@ -133,16 +142,16 @@ export function Sidebar({ className }: SidebarProps) {
                      >
                         <Avatar className="size-9">
                         <AvatarImage src="/placeholder-avatar.jpg" alt="Profile" />
-                        <AvatarFallback className="bg-emerald-100 text-emerald-700">
-                           TM
+                        <AvatarFallback className="bg-pri text-white">
+                           {user?.name?.[0] || "J"}
                         </AvatarFallback>
                         </Avatar>
                      </Button>
                   </TooltipTrigger>
                   <TooltipContent side="right">
                      <div>
-                        <p className="font-medium">Totok Michael</p>
-                        <p className="text-xs text-muted-foreground">tmichael20@mail.com</p>
+                        <p className="font-medium">{user?.name || "John Doe"}</p>
+                        <p className="text-xs text-muted-foreground">{user?.username || "johndoe"}</p>
                      </div>
                   </TooltipContent>
                   </Tooltip>
@@ -150,20 +159,32 @@ export function Sidebar({ className }: SidebarProps) {
                   <div className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-sidebar-accent">
                   <Avatar className="size-9">
                      <AvatarImage src="/placeholder-avatar.jpg" alt="Profile" />
-                     <AvatarFallback className="bg-emerald-100 text-emerald-700">
-                        TM
+                     <AvatarFallback className="bg-pri text-white">
+                        {user?.name?.[0] || "JD"}
                      </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 overflow-hidden">
                      <p className="truncate text-sm font-medium text-sidebar-foreground">
-                        Totok Michael
+                        {user?.name || "John Doe"}
                      </p>
                      <p className="truncate text-xs text-muted-foreground">
-                        tmichael20@mail.com
+                        {user?.username || "johndoe"}
                      </p>
                   </div>
+                  <Button
+                     variant="ghost"
+                     size="icon"
+                     className="size-8 shrink-0 text-muted-foreground hover:text-destructive"
+                     onClick={() => {
+                        signOut();
+                     }}
+                  >
+                     <LogOut className="size-4" />
+                     <span className="sr-only">Logout</span>
+                  </Button>
                   </div>
                )}
+            </div>
             </div>
 
          {/* Collapse Toggle Button */}

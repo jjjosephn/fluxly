@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 import { useToaster } from "@/app/ToasterContext"
 import { useRouter } from "next/navigation"
 import { BouncingDots } from "../ui/bouncing-dots"
+import { signIn } from "@/lib/auth"
 
 export function SignInCard() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
@@ -26,29 +27,13 @@ export function SignInCard() {
     e.preventDefault()
     setIsSubmitting(true);
 
-    const requestBody = {
-      emailOrUsername: formData.emailOrUsername,
-      password: formData.password
-    }
-
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/signin`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(requestBody)
-      })
+      const { token } = await signIn(formData.emailOrUsername, formData.password);
 
-      if(!res.ok) {
-        showToast('error', "Incorrect email, username, or password.", 'top-center');
-        setIsSubmitting(false);
-        return;
-      }
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const name = payload.name.split(' ')[0];
 
-      const data = await res.json()
-
-      localStorage.setItem('token', data.token);
+      showToast('success', `Welcome back ${name}!`, 'top-center');
 
       setFormData({
         emailOrUsername: '',
