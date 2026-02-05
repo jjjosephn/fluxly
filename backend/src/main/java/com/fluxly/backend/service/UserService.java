@@ -51,7 +51,7 @@ public class UserService {
       }
 
       User user = userOpt.get();
-      String token = jwtService.generateToken(user.getId().toString());
+      String token = jwtService.generateToken(user);
 
       return new UserLoginResponseDto(token);
    }

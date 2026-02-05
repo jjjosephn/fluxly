@@ -7,6 +7,8 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.fluxly.backend.entity.User;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -36,9 +38,12 @@ public class JwtService {
       this.key = Keys.hmacShaKeyFor(keyBytes);
    }
 
-   public String generateToken(String userId) {
+   public String generateToken(User user) {
       return Jwts.builder()
-            .setSubject(userId)
+            .setSubject(user.getId().toString())
+            .claim("username", user.getUsername())
+            .claim("name", user.getName())
+            .claim("email", user.getEmail())
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
             .signWith(key)
