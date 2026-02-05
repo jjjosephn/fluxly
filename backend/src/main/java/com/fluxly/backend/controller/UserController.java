@@ -31,7 +31,7 @@ public class UserController {
    }
 
    @PostMapping
-   public User registerUser(@RequestBody UserRegisterRequestDto request) {
+   public UserLoginResponseDto registerUser(@RequestBody UserRegisterRequestDto request) {
       return userService.registerUser(request);
    }
 

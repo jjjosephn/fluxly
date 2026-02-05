@@ -1,4 +1,5 @@
 package com.fluxly.backend.service;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.fluxly.backend.dto.UserLoginResponseDto;
 import com.fluxly.backend.dto.UserRegisterRequestDto;
 import com.fluxly.backend.dto.UserResponseDto;
 import com.fluxly.backend.entity.User;
@@ -50,7 +52,7 @@ public class UserServiceTest {
       mockUser.setUsername("testuser");
       mockUser.setName("Test User");
       mockUser.setPasswordHash("hashedpassword");
-      
+
    }
 
    @Test
@@ -62,13 +64,10 @@ public class UserServiceTest {
       ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
       // Act
-      User result = userService.registerUser(registerRequest);
+      UserLoginResponseDto result = userService.registerUser(registerRequest);
 
-      //Assert
+      // Assert
       assertNotNull(result);
-      assertEquals("test@example.com", result.getEmail());
-      assertEquals("testuser", result.getUsername());
-      assertEquals("Test User", result.getName());
 
       verify(passwordEncoder, times(1)).encode("password123");
       verify(userRepository, times(1)).save(userCaptor.capture());

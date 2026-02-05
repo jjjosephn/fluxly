@@ -1,0 +1,207 @@
+"use client"
+
+import { useState } from "react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip"
+import {
+  LayoutDashboard,
+  FileEdit,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  LogOut
+} from "lucide-react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import Image from "next/image"
+import { getUserFromToken, signOut } from "@/lib/auth"
+
+interface SidebarProps {
+   className?: string
+}
+
+const navItems = [
+   {
+      label: "Dashboard",
+      icon: LayoutDashboard,
+      href: "/ly/dashboard",
+   },
+   {
+      label: "Post",
+      icon: FileEdit,
+      href: "/ly/post",
+   },
+   {
+      label: "Calendar",
+      icon: CalendarDays,
+      href: "/ly/calendar",
+   },
+]
+
+export function Sidebar({ className }: SidebarProps) {
+   const [isCollapsed, setIsCollapsed] = useState(false)
+   const pathname = usePathname()
+   const user = getUserFromToken() as any;
+
+   return (
+      <TooltipProvider>
+         <aside
+            className={cn(
+               "relative m-3 flex h-[calc(100vh-24px)] flex-col rounded-2xl bg-gray-100 transition-all duration-300 ease-in-out",
+               isCollapsed ? "w-[72px]" : "w-[240px]",
+               className
+            )}
+         >
+            {/* Logo */}
+            <div className="flex h-16 items-center gap-2 px-5">
+               <div className="relative shrink-0">
+                  <Image
+                     src="/fluxly.png"
+                     alt="Fluxly Logo"
+                     width={32}
+                     height={32}
+                     className="object-contain"
+                     priority
+                  />
+               </div>
+
+               <span
+                  className={cn(
+                     "text-lg font-semibold text-sidebar-foreground transition-all duration-300",
+                     isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100 w-auto"
+                  )}
+               >
+                  Fluxly
+               </span>
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex-1 p-3">
+               <span
+                  className={cn(
+                     "mb-2 block text-xs font-medium uppercase tracking-wider text-muted-foreground",
+                     isCollapsed && "opacity-0"
+                  )}
+                  >
+                  Menu
+               </span>
+               <div className="space-y-1">
+                  {navItems.map((item) => {
+                  const isActive = pathname === item.href
+                  const NavLink = (
+                     <Link
+                        key={item.label}
+                        href={item.href}
+                        className={cn(
+                        "flex h-10 items-center gap-3 rounded-md px-3 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-gray-200",
+                        isCollapsed && "justify-center px-0",
+                        isActive &&
+                           "bg-pri text-white hover:bg-sec"
+                        )}
+                     >
+                        <item.icon className="size-5 shrink-0" />
+                        {!isCollapsed && <span>{item.label}</span>}
+                     </Link>
+                  )
+
+                  if (isCollapsed) {
+                     return (
+                        <Tooltip key={item.label}>
+                        <TooltipTrigger asChild>{NavLink}</TooltipTrigger>
+                        <TooltipContent side="right">{item.label}</TooltipContent>
+                        </Tooltip>
+                     )
+                  }
+
+                  return NavLink
+                  })}
+               </div>
+            </nav>
+
+            {/* Profile Section */}
+            <div className="mt-auto">
+            {/* Divider Line */}
+            <div className="border-t border-gray-300" />
+            
+            <div className="p-3">
+               {isCollapsed ? (
+                  <Tooltip>
+                  <TooltipTrigger asChild>
+                     <Button
+                        variant="ghost"
+                        className="w-full justify-center px-0"
+                     >
+                        <Avatar className="size-9">
+                        <AvatarImage src="/placeholder-avatar.jpg" alt="Profile" />
+                        <AvatarFallback className="bg-pri text-white">
+                           {user?.name?.[0] || "J"}
+                        </AvatarFallback>
+                        </Avatar>
+                     </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">
+                     <div>
+                        <p className="font-medium">{user?.name || "John Doe"}</p>
+                        <p className="text-xs text-muted-foreground">{user?.username || "johndoe"}</p>
+                     </div>
+                  </TooltipContent>
+                  </Tooltip>
+               ) : (
+                  <div className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-sidebar-accent">
+                  <Avatar className="size-9">
+                     <AvatarImage src="/placeholder-avatar.jpg" alt="Profile" />
+                     <AvatarFallback className="bg-pri text-white">
+                        {user?.name?.[0] || "JD"}
+                     </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 overflow-hidden">
+                     <p className="truncate text-sm font-medium text-sidebar-foreground">
+                        {user?.name || "John Doe"}
+                     </p>
+                     <p className="truncate text-xs text-muted-foreground">
+                        {user?.username || "johndoe"}
+                     </p>
+                  </div>
+                  <Button
+                     variant="ghost"
+                     size="icon"
+                     className="size-8 shrink-0 text-muted-foreground hover:text-destructive"
+                     onClick={() => {
+                        signOut();
+                     }}
+                  >
+                     <LogOut className="size-4" />
+                     <span className="sr-only">Logout</span>
+                  </Button>
+                  </div>
+               )}
+            </div>
+            </div>
+
+         {/* Collapse Toggle Button */}
+            <Button
+               variant="outline"
+               size="icon"
+               onClick={() => setIsCollapsed(!isCollapsed)}
+               className="absolute -right-3 top-5 z-10 size-6 rounded-full border-gray-200 bg-white shadow-md"
+            >
+               {isCollapsed ? (
+                  <ChevronRight className="size-3" />
+               ) : (
+                  <ChevronLeft className="size-3" />
+               )}
+               <span className="sr-only">
+                  {isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+               </span>
+            </Button>
+         </aside>
+      </TooltipProvider>
+   )
+}

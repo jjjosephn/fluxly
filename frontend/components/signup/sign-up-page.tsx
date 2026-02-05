@@ -9,6 +9,7 @@ import { BouncingDots } from '@/components/ui/bouncing-dots'
 import Image from 'next/image'
 import { useRouter } from "next/navigation"
 import { useToaster } from "@/app/ToasterContext"
+import { getUserFromToken, signUp } from "@/lib/auth"
 
 export function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -35,54 +36,29 @@ const handleOnSubmit = async (e: React.FormEvent) => {
 
     setIsSubmitting(true)
 
-    const requestBody = {
-      email: formData.email,
-      name: formData.name,
-      username: formData.username,
-      password: formData.password
-    }
-
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(requestBody)
-        })
+        const data = await signUp(formData.name, formData.username, formData.email, formData.password)
 
-        if (res.status === 409) {
-          const message = await res.text()
-          showToast('error', message, 'top-center');
-          return
-        }
-
-        if (!res.ok) {
-          const message = await res.text()
-          console.error('Signup failed:', message)
-          showToast('error', 'Signup failed. Please try again.', 'top-center');
-          return
+        if (!data.token) {
+          throw new Error('Signup failed. Please try again.')
         }
         
-        const data = await res.json()
-        console.log('User signed up successfully:', data)
-    } catch (error) {
-        console.error('Error signing up:', error)
-        showToast('error', 'Unable to connect to the server. Please check your connection and try again later.', 'top-center');
+        const user = getUserFromToken();
+        showToast('success', `Welcome to Fluxly, ${user?.name.split(' ')[0]}.`, 'top-center');
+
+        setFormData({
+          email: '',
+          name: '',
+          username: '',
+          password: ''
+        });
+
+        router.push("/ly/dashboard")
+    } catch (error: any) {
+      showToast('error', error.message || 'Unable to connect to the server. Please check your connection and try again later.', 'top-center');
     } finally {
-        setIsSubmitting(false)
+      setIsSubmitting(false)
     }
-
-    showToast('success', `Welcome to Fluxly, ${formData.name}.`, 'top-center');
-
-    setFormData({
-      email: '',
-      name: '',
-      username: '',
-      password: ''
-    });
-
-    router.push("/dashboard")
   }
 
   return (

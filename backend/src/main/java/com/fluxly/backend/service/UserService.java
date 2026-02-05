@@ -32,11 +32,15 @@ public class UserService {
       return new UserResponseDto(user.getId(), user.getEmail(), user.getUsername(), user.getName());
    } 
 
-   public User registerUser(UserRegisterRequestDto request) {
+   public UserLoginResponseDto registerUser(UserRegisterRequestDto request) {
       String hashedPassword = passwordEncoder.encode(request.getPassword());
       User newUser = new User(request.getEmail(), request.getUsername(), request.getName(), hashedPassword);
 
-      return userRepository.save(newUser);
+      User savedUser = userRepository.save(newUser);
+
+      String token = jwtService.generateToken(savedUser);
+
+      return new UserLoginResponseDto(token);
    }
 
    public List<UserResponseDto> getAllUsers() {
@@ -51,7 +55,7 @@ public class UserService {
       }
 
       User user = userOpt.get();
-      String token = jwtService.generateToken(user.getId().toString());
+      String token = jwtService.generateToken(user);
 
       return new UserLoginResponseDto(token);
    }

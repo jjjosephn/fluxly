@@ -4,9 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        pri: "#252a36",
-        sec: "#303948",
+        pri: "#384254",
+        sec: "#252a36",
         cta: "#2a78bb",
+        "dark-cta": "#145369"
       },
     },
   },

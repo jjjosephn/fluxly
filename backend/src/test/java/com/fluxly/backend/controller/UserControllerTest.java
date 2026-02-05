@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 
+import com.fluxly.backend.dto.UserLoginResponseDto;
 import com.fluxly.backend.dto.UserRegisterRequestDto;
 import com.fluxly.backend.dto.UserResponseDto;
 import com.fluxly.backend.entity.User;
@@ -65,15 +66,15 @@ public class UserControllerTest {
       request.setUsername("user");
       request.setName("User");
 
-      User user = new User("user@example.com", "user", "User", "hashedpassword");
+      UserLoginResponseDto token = new UserLoginResponseDto("dummyToken");
 
-      when(userService.registerUser(any(UserRegisterRequestDto.class))).thenReturn(user);
+      when(userService.registerUser(any(UserRegisterRequestDto.class))).thenReturn(token);
 
       mockMvc.perform(post("/api/users/")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.email").value("user@example.com"));
+            .andExpect(jsonPath("$.token").value("dummyToken"));
    }
 
 }
